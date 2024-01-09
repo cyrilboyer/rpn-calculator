@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  client:
+    hostname: client
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 333M
+    build:
+      context: ../
+      dockerfile: deployment/client.Dockerfile
+    ports:
+      - "8080:80"
+  server:
+    hostname: server
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 333M
+    build:
+      context: ../
+      dockerfile: deployment/server.Dockerfile
+    environment:
+      - PRODUCTION=True
+    secrets:
+      - database_password
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"
+  database:
+    hostname: database
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 333M
+    build:
+      context: ../
+      dockerfile: deployment/database.Dockerfile
+    secrets:
+      - database_password
+    image: mongo:4.0
+    volumes:
+      - ../database:/database/data
+      - ../database/dump:/database/dump
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/database_password
+    ports:
+      - "27099:27017"
+secrets:
+  database_password:
+    file: ./database_password.txt

@@ -1,0 +1,5 @@
+client/node_modules
+database/**
+python-rpn
+server/.pytest_cache
+server/__pycache__
