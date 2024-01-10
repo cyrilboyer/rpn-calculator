@@ -59,6 +59,7 @@ class ExpressionRequest(BaseModel):
 # calculation function
 def do_calculate(stack: List[float] = [], expression: str = ""):
     result = None
+    has_result = False
     for part in expression.split():
         if part in ["+", "-", "*", "/", "%", "^"]:
             b, a = stack.pop(), stack.pop()
@@ -77,6 +78,7 @@ def do_calculate(stack: List[float] = [], expression: str = ""):
             elif part == "^":
                 result = pow(a, b)
             stack.append(result)
+            has_result = True
         else:
             try:
                 number = float(part)
@@ -87,7 +89,7 @@ def do_calculate(stack: List[float] = [], expression: str = ""):
     if isnan(stack[-1]):
         raise HTTPException(status_code=400, detail="Resultat n'est pas un nombre.")
 
-    return stack, stack[-1]
+    return stack, (stack[-1] if has_result else "")
 
 
 # calculate route

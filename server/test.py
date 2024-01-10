@@ -19,7 +19,7 @@ def test_calculate():
         {"expression": "343 45 + 12 /", "expected_result": 32.333333333333336},
         # passing a stack to perform calculate like stepped operations
         {"expression": "3 4 5 + *", "expected_result": 27, "expected_stack": [27]},
-        {"stack": [27], "expression": "9 3", "expected_result": 3, "expected_stack": [27, 9, 3]},
+        {"stack": [27], "expression": "9 3", "expected_result": "", "expected_stack": [27, 9, 3]},
         {"stack": [27, 9, 3], "expression": "+ /", "expected_result": 2.25, "expected_stack": [2.25]},
     ]
     for case in test_cases:
@@ -27,7 +27,6 @@ def test_calculate():
             "/calculate",
             json={"stack": case.get("stack", []), "expression": case["expression"]}
         )
-        print(response.json())
         assert response.status_code == 200
         assert response.json()['result_number'] == case["expected_result"]
         if "expected_stack" in case:

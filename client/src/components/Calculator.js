@@ -157,9 +157,9 @@ class Calculator extends React.Component {
     }
 
     inputSign(sign) {
-        const { displayValue } = this.state
+        const { displayValue, stack } = this.state
         
-        if( displayValue === "" )
+        if( displayValue === "" && !stack.length )
             return
 
         this.setState({
